@@ -20,7 +20,7 @@ except OSError:
 
 @app.route('/')
 def hello_world():  # put application's code here
-    return "Hello Tour de App!"
+    return "Hello TdA"
 
 @app.route('/api')
 def return_json():
