@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, jsonify
-from . import db
+#from . import db
 
 app = Flask(__name__)
 
@@ -15,7 +15,7 @@ try:
 except OSError:
     pass
 
-db.init_app(app)
+#db.init_app(app)
 
 
 @app.route('/')
