@@ -19,7 +19,11 @@
     <h2>Uložené hry</h2>
     <ul>
         {% for game in games %}
-            <li><a href="#" class="game-link" data-game="{{ game }}">{{ game }}</a></li>
+            <li>
+                <a href="#" class="game-link" data-game="{{ game.name }}">
+                    {{ game.name }} ({{ game.date }})
+                </a>
+            </li>
         {% endfor %}
     </ul>
 
@@ -29,55 +33,126 @@
             <span class="modal-close" id="closeModal">&times;</span>
             <h2>Herní pole</h2>
             <div class="game-grid" id="modalGameGrid"></div>
+            <div class="controls">
+                <button id="prevMove">Předchozí</button>
+                <span id="stepIndicator">Tah: 0</span>
+                <button id="nextMove">Následující</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // Odkazy na prvky
         const modal = document.getElementById('gameModal');
-        const closeModal = document.getElementById('closeModal');
-        const modalGameGrid = document.getElementById('modalGameGrid');
-        const gameLinks = document.querySelectorAll('.game-link');
+const closeModal = document.getElementById('closeModal');
+const modalGameGrid = document.getElementById('modalGameGrid');
+const prevMoveBtn = document.getElementById('prevMove');
+const nextMoveBtn = document.getElementById('nextMove');
+const stepIndicator = document.getElementById('stepIndicator');
+const gameLinks = document.querySelectorAll('.game-link');
 
-        // Funkce pro zobrazení modálního okna
-        const showModal = (gameData) => {
-            modalGameGrid.innerHTML = ''; // Vymazat předchozí obsah
-            const moves = gameData.moves;
+let currentGame = null;
+let currentStep = 0;
+let totalSteps = 0;
+let allMoves = [];
 
-            // Vytvoření hracího pole
-            for (let y = 0; y < 15; y++) {
-                for (let x = 0; x < 15; x++) {
-                    const cell = document.createElement('div');
-                    cell.classList.add('game-cell');
-                    const move = moves.find(m => m.x === x && m.y === y);
-                    if (move) {
-                        cell.textContent = move.player === 1 ? 'X' : 'O';
-                    }
-                    modalGameGrid.appendChild(cell);
-                }
+const fetchAllMoves = async (gameName) => {
+    const response = await fetch(`/load_game_data/${gameName}`);
+    const data = await response.json();
+    return data.moves;
+};
+
+const renderFullGameGrid = (moves) => {
+    modalGameGrid.innerHTML = '';
+    const grid = Array.from({ length: 15 }, () => Array(15).fill(0));
+
+    moves.forEach((move) => {
+        grid[move.y][move.x] = move.player;
+    });
+
+    for (let y = 0; y < 15; y++) {
+        for (let x = 0; x < 15; x++) {
+            const cell = document.createElement('div');
+            cell.classList.add('game-cell');
+            if (grid[y][x] === 1) {
+                cell.textContent = 'X';
+            } else if (grid[y][x] === 2) {
+                cell.textContent = 'O';
             }
-            modal.style.display = 'flex';
-        };
+            modalGameGrid.appendChild(cell);
+        }
+    }
+};
 
-        // Zavření modálního okna
-        closeModal.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
+const renderGameGrid = (step) => {
+    modalGameGrid.innerHTML = '';
+    const grid = Array.from({ length: 15 }, () => Array(15).fill(0));
 
-        // Kliknutí na uloženou hru
-        gameLinks.forEach(link => {
-            link.addEventListener('click', async (event) => {
-                event.preventDefault();
-                const gameName = link.dataset.game;
+    for (let i = 0; i <= step; i++) {
+        const move = allMoves[i];
+        grid[move.y][move.x] = move.player;
+    }
 
-                // Načtení tahů ze serveru
-                const response = await fetch(`/load_game_data/${gameName}`);
-                const gameData = await response.json();
+    for (let y = 0; y < 15; y++) {
+        for (let x = 0; x < 15; x++) {
+            const cell = document.createElement('div');
+            cell.classList.add('game-cell');
+            if (grid[y][x] === 1) {
+                cell.textContent = 'X';
+            } else if (grid[y][x] === 2) {
+                cell.textContent = 'O';
+            }
+            modalGameGrid.appendChild(cell);
+        }
+    }
+};
 
-                // Zobrazení modálního okna
-                showModal(gameData);
-            });
-        });
+const updateControls = () => {
+    stepIndicator.textContent = `Tah: ${currentStep + 1}`;
+    prevMoveBtn.disabled = currentStep <= 0;
+    nextMoveBtn.disabled = currentStep >= totalSteps - 1;
+};
+
+const showModal = async (gameName) => {
+    currentGame = gameName;
+    allMoves = await fetchAllMoves(gameName);
+    totalSteps = allMoves.length;
+    currentStep = totalSteps - 1;
+
+    // Zobrazit celé hrací pole
+    renderFullGameGrid(allMoves);
+    updateControls();
+
+    modal.style.display = 'flex';
+};
+
+closeModal.addEventListener('click', () => {
+    modal.style.display = 'none';
+});
+
+prevMoveBtn.addEventListener('click', () => {
+    if (currentStep > 0) {
+        currentStep -= 1;
+        renderGameGrid(currentStep);
+        updateControls();
+    }
+});
+
+nextMoveBtn.addEventListener('click', () => {
+    if (currentStep < totalSteps - 1) {
+        currentStep += 1;
+        renderGameGrid(currentStep);
+        updateControls();
+    }
+});
+
+gameLinks.forEach(link => {
+    link.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const gameName = link.dataset.game;
+        await showModal(gameName);
+    });
+});
+
     </script>
 </body>
 </html>

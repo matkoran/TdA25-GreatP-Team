@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, send_from_directory
 import os
 import json
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -73,7 +74,16 @@ def start():
     """
     Úvodní stránka se seznamem uložených her.
     """
-    games = os.listdir(SAVED_GAMES_DIR)
+    games = []
+    for file_name in os.listdir(SAVED_GAMES_DIR):
+        if file_name.endswith('.json'):
+            file_path = os.path.join(SAVED_GAMES_DIR, file_name)
+            with open(file_path, 'r') as f:
+                data = json.load(f)
+                games.append({"name": data["game_name"], "date": data.get("date", "Neznámé datum")})
+
+    # Seřazení her podle data sestupně
+    games.sort(key=lambda x: x["date"], reverse=True)
     return render_template('start.html', games=games)
 
 @app.route('/game', methods=['POST'])
@@ -82,7 +92,7 @@ def game():
     Zobrazí herní stránku po zadání názvu hry.
     """
     global game_name, matrix, moves
-    game_name = request.form['game_name']
+    game_name = request.form['game_name'].replace(" ", "_")
     file_path = os.path.join(SAVED_GAMES_DIR, f"{game_name}.json")
 
     # Kontrola, zda již hra existuje
@@ -94,13 +104,12 @@ def game():
     moves = []
     return render_template('index.html', game_name=game_name)
 
-
 @app.route('/load_game_data/<game_name>')
 def load_game_data(game_name):
     """
     Vrátí data hry ve formátu JSON.
     """
-    file_path = os.path.join(SAVED_GAMES_DIR, game_name)
+    file_path = os.path.join(SAVED_GAMES_DIR, f"{game_name}.json")
     if not os.path.exists(file_path):
         return jsonify({"error": "Hra neexistuje"}), 404
 
@@ -135,6 +144,29 @@ def play():
 
     return jsonify({"success": True, "message": "Tah zapsán."})
 
+@app.route('/api/replay', methods=['GET'])
+def replay():
+    """
+    API endpoint pro přehrávání tahů.
+    Vrací tah na základě indexu v parametru `step`.
+    """
+    game_name = request.args.get('game_name')
+    step = int(request.args.get('step', 0))
+    file_path = os.path.join(SAVED_GAMES_DIR, f"{game_name}.json")
+
+    if not os.path.exists(file_path):
+        return jsonify({"error": "Hra neexistuje"}), 404
+
+    with open(file_path, 'r') as f:
+        data = json.load(f)
+
+    moves = data.get("moves", [])
+    if step < 0 or step >= len(moves):
+        return jsonify({"error": "Neplatný krok"}), 400
+
+    current_move = moves[step]
+    return jsonify({"move": current_move, "step": step, "total_steps": len(moves)})
+
 def save_game():
     """
     Uloží záznam hry do JSON souboru.
@@ -142,7 +174,7 @@ def save_game():
     if game_name:
         file_path = os.path.join(SAVED_GAMES_DIR, f"{game_name}.json")
         with open(file_path, 'w') as f:
-            json.dump({"game_name": game_name, "moves": moves}, f)
+            json.dump({"game_name": game_name, "moves": moves, "date": datetime.now().isoformat()}, f)
 
 if __name__ == '__main__':
     app.run(debug=True)
