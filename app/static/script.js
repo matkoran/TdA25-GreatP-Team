@@ -37,7 +37,8 @@ const handleCellClick = async (event) => {
         currentPlayerDisplay.textContent = currentPlayer === 1 ? '2' : '1';
 
         if (result.winner) {
-            alert(`Hráč ${result.winner} vyhrál!`);
+            alert(`Hráč ${result.winner} vyhrál! Hra se restartuje.`);
+            window.location.href = '/';
         }
     } else {
         alert(result.message);

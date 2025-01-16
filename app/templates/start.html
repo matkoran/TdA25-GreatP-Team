@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Začátek hry</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1>Vítejte v Piškvorkách!</h1>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <form action="/game" method="POST">
+        <label for="game_name">Název hry:</label>
+        <input type="text" id="game_name" name="game_name" required>
+        <button type="submit">Začít</button>
+    </form>
+    <h2>Uložené hry</h2>
+    <ul>
+        {% for game in games %}
+            <li><a href="#" class="game-link" data-game="{{ game }}">{{ game }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <!-- Modal okno -->
+    <div class="modal" id="gameModal">
+        <div class="modal-content">
+            <span class="modal-close" id="closeModal">&times;</span>
+            <h2>Herní pole</h2>
+            <div class="game-grid" id="modalGameGrid"></div>
+        </div>
+    </div>
+
+    <script>
+        // Odkazy na prvky
+        const modal = document.getElementById('gameModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalGameGrid = document.getElementById('modalGameGrid');
+        const gameLinks = document.querySelectorAll('.game-link');
+
+        // Funkce pro zobrazení modálního okna
+        const showModal = (gameData) => {
+            modalGameGrid.innerHTML = ''; // Vymazat předchozí obsah
+            const moves = gameData.moves;
+
+            // Vytvoření hracího pole
+            for (let y = 0; y < 15; y++) {
+                for (let x = 0; x < 15; x++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('game-cell');
+                    const move = moves.find(m => m.x === x && m.y === y);
+                    if (move) {
+                        cell.textContent = move.player === 1 ? 'X' : 'O';
+                    }
+                    modalGameGrid.appendChild(cell);
+                }
+            }
+            modal.style.display = 'flex';
+        };
+
+        // Zavření modálního okna
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        // Kliknutí na uloženou hru
+        gameLinks.forEach(link => {
+            link.addEventListener('click', async (event) => {
+                event.preventDefault();
+                const gameName = link.dataset.game;
+
+                // Načtení tahů ze serveru
+                const response = await fetch(`/load_game_data/${gameName}`);
+                const gameData = await response.json();
+
+                // Zobrazení modálního okna
+                showModal(gameData);
+            });
+        });
+    </script>
+</body>
+</html>

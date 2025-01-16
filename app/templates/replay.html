@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Záznam hry: {{ game_name }}</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1>Záznam hry: {{ game_name }}</h1>
+    <div class="grid" id="gameGrid"></div>
+    <script>
+        const moves = JSON.parse('{{ moves | tojson | safe }}');
+        const grid = document.getElementById('gameGrid');
+    
+        // Vytvoření hracího pole
+        const createGrid = () => {
+            for (let y = 0; y < 15; y++) {
+                for (let x = 0; x < 15; x++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    grid.appendChild(cell);
+                }
+            }
+        };
+    
+        // Zobrazení tahů
+        const showMoves = () => {
+            moves.forEach((move) => {
+                const cellIndex = move.y * 15 + move.x;
+                const cell = grid.children[cellIndex];
+                cell.textContent = move.player === 1 ? 'X' : 'O';
+            });
+        };
+    
+        createGrid();
+        showMoves();
+    </script>
+    
+</body>
+</html>
