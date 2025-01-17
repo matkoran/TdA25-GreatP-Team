@@ -33,40 +33,55 @@ def win(x, y, pole, z):
     while check(x - p2, y, pole, z):
         p2 += 1
     if p1 + p2 - 1 >= 5:
-        winning_combination = [(x + i, y) for i in range(-p2 + 1, p1)]
+        # Sestavení výherní kombinace
+        for i in range(-p2 + 1, p1):
+            winning_combination.append({"x": x + i, "y": y})
         return True, winning_combination
+    else:
+        p1 = 1
+        p2 = 1
 
     # Vertikální
-    p1 = p2 = 1
     while check(x, y - p1, pole, z):
         p1 += 1
     while check(x, y + p2, pole, z):
         p2 += 1
     if p1 + p2 - 1 >= 5:
-        winning_combination = [(x, y + i) for i in range(-p1 + 1, p2)]
+        # Sestavení výherní kombinace
+        for i in range(-p2 + 1, p1):
+            winning_combination.append({"x": x, "y": y + i})
         return True, winning_combination
+    else:
+        p1 = 1
+        p2 = 1
 
     # Diagonální /
-    p1 = p2 = 1
     while check(x + p1, y - p1, pole, z):
         p1 += 1
     while check(x - p2, y + p2, pole, z):
         p2 += 1
     if p1 + p2 - 1 >= 5:
-        winning_combination = [(x + i, y - i) for i in range(-p2 + 1, p1)]
+        # Sestavení výherní kombinace
+        for i in range(-p2 + 1, p1):
+            winning_combination.append({"x": x + i, "y": y - i})
         return True, winning_combination
+    else:
+        p1 = 1
+        p2 = 1
 
     # Diagonální \
-    p1 = p2 = 1
     while check(x - p1, y - p1, pole, z):
         p1 += 1
     while check(x + p2, y + p2, pole, z):
         p2 += 1
     if p1 + p2 - 1 >= 5:
-        winning_combination = [(x + i, y + i) for i in range(-p2 + 1, p1)]
+        # Sestavení výherní kombinace
+        for i in range(-p2 + 1, p1):
+            winning_combination.append({"x": x - i, "y": y - i})
         return True, winning_combination
+    else:
+        return False, []
 
-    return False, []
 
 @app.route('/')
 def start():
@@ -122,6 +137,7 @@ def load_game_data(game_name):
     return jsonify(data)
 
 @app.route('/api/play', methods=['POST'])
+@app.route('/api/play', methods=['POST'])
 def play():
     """
     API endpoint zpracovávající tah hráče.
@@ -141,12 +157,17 @@ def play():
     moves.append({"x": x, "y": y, "player": player})
 
     # Kontrola výhry
-    if win(x, y, matrix, player):
-        save_game()
-        return jsonify({"success": True, "winner": player, "message": "Máme vítěze!"})
+    has_won, winning_combination = win(x, y, matrix, player)
+    if has_won:
+        save_game()  # Uložení hry
+        return jsonify({
+            "success": True,
+            "winner": player,
+            "message": "Máme vítěze!",
+            "winningCombination": winning_combination  # Posíláme výherní kombinaci zpět
+        })
 
     return jsonify({"success": True, "message": "Tah zapsán."})
-
 @app.route('/api/replay', methods=['GET'])
 def replay():
     """

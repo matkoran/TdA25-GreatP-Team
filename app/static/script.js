@@ -51,7 +51,6 @@
                 if (result.winner) {
                     alert(`Hráč ${result.winner === 1 ? player1Name : player2Name} vyhrál!`);
                     console.log(document.querySelector('.cell').offsetWidth);
-                    console.log(result.winningCombination);
         
                     if (result.winningCombination) {
                         drawWinningLine(result.winningCombination);
@@ -63,46 +62,46 @@
                 alert(result.message);
             }
         };
-        const testLine = document.createElement('div');
-testLine.classList.add('winning-line');
-testLine.style.width = '200px';
-testLine.style.height = '4px';
-testLine.style.backgroundColor = 'blue';
-testLine.style.position = 'absolute';
-testLine.style.left = '100px';
-testLine.style.top = '100px';
-document.getElementById('gameGrid').appendChild(testLine);
         
         // Funkce pro vykreslení čáry přes výherní kombinaci
         const drawWinningLine = (combination) => {
             const grid = document.getElementById('gameGrid');
-        
-            // První a poslední buňka výherní kombinace
+            
+            // Souřadnice prvního a posledního bodu výherní kombinace
             const firstCell = combination[0];
             const lastCell = combination[combination.length - 1];
         
-            // Souřadnice prvního a posledního bodu
-            const startX = firstCell.x * 40 + 20; // 40px = velikost buňky, 20px = polovina buňky
-            const startY = firstCell.y * 40 + 20;
-            const endX = lastCell.x * 40 + 20;
-            const endY = lastCell.y * 40 + 20;
+            // Přepočet souřadnic na pixely
+            const cellSize = document.querySelector('.cell').offsetWidth; // Dynamicky zjistí velikost buňky
+            const startX = firstCell.x * cellSize + cellSize / 2;
+            const startY = firstCell.y * cellSize + cellSize / 2;
+            const endX = lastCell.x * cellSize + cellSize / 2;
+            const endY = lastCell.y * cellSize + cellSize / 2;
         
-            // Vytvoření elementu pro čáru
+            // Výpočet délky a úhlu čáry
+            const dx = endX - startX;
+            const dy = endY - startY;
+            const length = Math.sqrt(dx ** 2 + dy ** 2);
+            const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+        
+            // Vytvoření čáry
             const line = document.createElement('div');
             line.classList.add('winning-line');
         
-            // Nastavení pozice a rotace čáry
-            const angle = Math.atan2(endY - startY, endX - startX) * (180 / Math.PI);
-            const length = Math.sqrt((endX - startX) ** 2 + (endY - startY) ** 2);
-        
+            // Stylování čáry
             line.style.width = `${length}px`;
+            line.style.height = '4px'; // Tloušťka čáry
+            line.style.backgroundColor = 'red'; // Barva čáry
+            line.style.position = 'absolute';
+            line.style.transformOrigin = '0 50%'; // Rotace kolem levého středu
             line.style.transform = `rotate(${angle}deg)`;
             line.style.left = `${startX}px`;
-            line.style.top = `${startY}px`;
+            line.style.top = `${startY - 2}px`; // Upraví vertikální pozici čáry (polovina výšky čáry)
         
             // Přidání čáry do gridu
             grid.appendChild(line);
         };
+        
         
         
         createGrid();
