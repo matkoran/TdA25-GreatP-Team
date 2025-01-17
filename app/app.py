@@ -173,8 +173,11 @@ def save_game():
     """
     if game_name:
         file_path = os.path.join(SAVED_GAMES_DIR, f"{game_name}.json")
+        # Formátování času na "YYYY-MM-DD HH:MM"
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M")
         with open(file_path, 'w') as f:
-            json.dump({"game_name": game_name, "moves": moves, "date": datetime.now().isoformat()}, f)
+            json.dump({"game_name": game_name, "moves": moves, "date": current_time}, f)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
