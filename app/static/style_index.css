@@ -1,0 +1,87 @@
+@font-face {
+    font-family: 'kraljidel';
+    src: url(Karljidelfont-Regular.ttf);
+}
+
+body {
+    font-family: 'kraljidel';
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Centrovat obsah vertikálně */
+    height: 100vh; /* Celková výška okna */
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    user-select: none; /* Zabrání výběru textu */
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px; /* Maximální šířka obsahu */
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Lehké stínování */
+    background-color: white;
+    border-radius: 10px;
+}
+
+.games-box {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: 300px; /* Maximální výška boxu pro hry */
+    overflow-y: auto; /* Povolí posouvání ve svislém směru */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.games-box::-webkit-scrollbar {
+    width: 10px; /* Šířka scrollbar-u */
+}
+
+.games-box::-webkit-scrollbar-thumb {
+    background: #888; /* Barva scrollbar-u */
+    border-radius: 5px;
+}
+
+.games-box::-webkit-scrollbar-thumb:hover {
+    background: #555; /* Barva scrollbar-u při najetí myší */
+}
+
+.game-item {
+    padding: 10px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.game-item:hover {
+    background-color: #eee;
+}
+
+.player-names {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.player-names label {
+    margin: 5px 0;
+}
+
+.player-names input {
+    margin-bottom: 10px;
+    padding: 5px;
+    font-size: 16px;
+}
