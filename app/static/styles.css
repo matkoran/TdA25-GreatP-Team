@@ -132,11 +132,11 @@ body {
 
 .game-grid {
     display: grid;
-    grid-template-columns: repeat(15, 30px);
-    gap: 2px;
-    margin: 20px auto;
+    grid-template-columns: repeat(15, 40px);
+    grid-template-rows: repeat(15, 40px);
+    background-color: #fff;
+    user-select: none; /* Zabrání výběru textu */
     justify-content: center;
-    user-select: none;
 }
 
 .game-cell {
