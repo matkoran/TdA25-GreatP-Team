@@ -10,6 +10,17 @@
     <h1>Piškvorky: {{ game_name }}</h1>
     <div class="grid" id="gameGrid"></div>
     <p>Na tahu je hráč: <span id="currentPlayer">1</span></p>
+
+    <div class="player-names">
+        <label for="player1">Jméno hráče 1:</label>
+        <input type="text" id="player1" placeholder="Hráč 1" />
+
+        <label for="player2">Jméno hráče 2:</label>
+        <input type="text" id="player2" placeholder="Hráč 2" />
+
+        <button id="updateNames">Aktualizovat jména</button>
+    </div>
+
     <script src="/static/script.js"></script>
 </body>
 </html>
