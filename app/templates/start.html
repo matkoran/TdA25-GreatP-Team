@@ -4,53 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Začátek hry</title>
-    <link rel="stylesheet" href="/static/style_start.css">
-    <script>
-        async function deleteGame(gameName) {
-            const confirmation = confirm(Opravdu chcete odstranit hru: ${gameName}?);
-            if (!confirmation) return;
-
-            try {
-                const response = await fetch('/api/delete_game', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ game_name: gameName }),
-                });
-
-                const result = await response.json();
-                if (response.ok) {
-                    alert(result.message);
-                    document.getElementById(game-${gameName}).remove();
-                } else {
-                    alert(result.message || 'Chyba při odstraňování hry.');
-                }
-            } catch (error) {
-                alert('Došlo k chybě při komunikaci se serverem.');
-            }
-        }
-    </script>
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-    <h1 class="title">Vítejte v Piškvorkách!</h1>
+    <h1>Vítejte v Piškvorkách!</h1>
     {% if error %}
         <p style="color: red;">{{ error }}</p>
     {% endif %}
     <form action="/game" method="POST">
-        <label for="game_name" class="game_title">Název hry:</label>
+        <label for="game_name">Název hry:</label>
         <input type="text" id="game_name" name="game_name" required>
-        <br>
         <button type="submit">Začít</button>
     </form>
     <h2>Uložené hry</h2>
     <ul>
         {% for game in games %}
-            <li id="game-{{ game.name }}">
+            <li>
                 <a href="#" class="game-link" data-game="{{ game.name }}">
                     {{ game.name }} ({{ game.date }})
                 </a>
-                <button onclick="deleteGame('{{ game.name }}')">Odstranit</button>
             </li>
         {% endfor %}
     </ul>
@@ -71,115 +43,115 @@
 
     <script>
         const modal = document.getElementById('gameModal');
-        const closeModal = document.getElementById('closeModal');
-        const modalGameGrid = document.getElementById('modalGameGrid');
-        const prevMoveBtn = document.getElementById('prevMove');
-        const nextMoveBtn = document.getElementById('nextMove');
-        const stepIndicator = document.getElementById('stepIndicator');
-        const gameLinks = document.querySelectorAll('.game-link');
+const closeModal = document.getElementById('closeModal');
+const modalGameGrid = document.getElementById('modalGameGrid');
+const prevMoveBtn = document.getElementById('prevMove');
+const nextMoveBtn = document.getElementById('nextMove');
+const stepIndicator = document.getElementById('stepIndicator');
+const gameLinks = document.querySelectorAll('.game-link');
 
-        let currentGame = null;
-        let currentStep = 0;
-        let totalSteps = 0;
-        let allMoves = [];
+let currentGame = null;
+let currentStep = 0;
+let totalSteps = 0;
+let allMoves = [];
 
-        const fetchAllMoves = async (gameName) => {
-            const response = await fetch(/load_game_data/${gameName});
-            const data = await response.json();
-            return data.moves;
-        };
+const fetchAllMoves = async (gameName) => {
+    const response = await fetch(`/load_game_data/${gameName}`);
+    const data = await response.json();
+    return data.moves;
+};
 
-        const renderFullGameGrid = (moves) => {
-            modalGameGrid.innerHTML = '';
-            const grid = Array.from({ length: 15 }, () => Array(15).fill(0));
+const renderFullGameGrid = (moves) => {
+    modalGameGrid.innerHTML = '';
+    const grid = Array.from({ length: 15 }, () => Array(15).fill(0));
 
-            moves.forEach((move) => {
-                grid[move.y][move.x] = move.player;
-            });
+    moves.forEach((move) => {
+        grid[move.y][move.x] = move.player;
+    });
 
-            for (let y = 0; y < 15; y++) {
-                for (let x = 0; x < 15; x++) {
-                    const cell = document.createElement('div');
-                    cell.classList.add('game-cell');
-                    if (grid[y][x] === 1) {
-                        cell.textContent = 'X';
-                    } else if (grid[y][x] === 2) {
-                        cell.textContent = 'O';
-                    }
-                    modalGameGrid.appendChild(cell);
-                }
+    for (let y = 0; y < 15; y++) {
+        for (let x = 0; x < 15; x++) {
+            const cell = document.createElement('div');
+            cell.classList.add('game-cell');
+            if (grid[y][x] === 1) {
+                cell.textContent = 'X';
+            } else if (grid[y][x] === 2) {
+                cell.textContent = 'O';
             }
-        };
+            modalGameGrid.appendChild(cell);
+        }
+    }
+};
 
-        const renderGameGrid = (step) => {
-            modalGameGrid.innerHTML = '';
-            const grid = Array.from({ length: 15 }, () => Array(15).fill(0));
+const renderGameGrid = (step) => {
+    modalGameGrid.innerHTML = '';
+    const grid = Array.from({ length: 15 }, () => Array(15).fill(0));
 
-            for (let i = 0; i <= step; i++) {
-                const move = allMoves[i];
-                grid[move.y][move.x] = move.player;
+    for (let i = 0; i <= step; i++) {
+        const move = allMoves[i];
+        grid[move.y][move.x] = move.player;
+    }
+
+    for (let y = 0; y < 15; y++) {
+        for (let x = 0; x < 15; x++) {
+            const cell = document.createElement('div');
+            cell.classList.add('game-cell');
+            if (grid[y][x] === 1) {
+                cell.textContent = 'X';
+            } else if (grid[y][x] === 2) {
+                cell.textContent = 'O';
             }
+            modalGameGrid.appendChild(cell);
+        }
+    }
+};
 
-            for (let y = 0; y < 15; y++) {
-                for (let x = 0; x < 15; x++) {
-                    const cell = document.createElement('div');
-                    cell.classList.add('game-cell');
-                    if (grid[y][x] === 1) {
-                        cell.textContent = 'X';
-                    } else if (grid[y][x] === 2) {
-                        cell.textContent = 'O';
-                    }
-                    modalGameGrid.appendChild(cell);
-                }
-            }
-        };
+const updateControls = () => {
+    stepIndicator.textContent = `Tah: ${currentStep + 1}`;
+    prevMoveBtn.disabled = currentStep <= 0;
+    nextMoveBtn.disabled = currentStep >= totalSteps - 1;
+};
 
-        const updateControls = () => {
-            stepIndicator.textContent = Tah: ${currentStep + 1};
-            prevMoveBtn.disabled = currentStep <= 0;
-            nextMoveBtn.disabled = currentStep >= totalSteps - 1;
-        };
+const showModal = async (gameName) => {
+    currentGame = gameName;
+    allMoves = await fetchAllMoves(gameName);
+    totalSteps = allMoves.length;
+    currentStep = totalSteps - 1;
 
-        const showModal = async (gameName) => {
-            currentGame = gameName;
-            allMoves = await fetchAllMoves(gameName);
-            totalSteps = allMoves.length;
-            currentStep = totalSteps - 1;
+    // Zobrazit celé hrací pole
+    renderFullGameGrid(allMoves);
+    updateControls();
 
-            // Zobrazit celé hrací pole
-            renderFullGameGrid(allMoves);
-            updateControls();
+    modal.style.display = 'flex';
+};
 
-            modal.style.display = 'flex';
-        };
+closeModal.addEventListener('click', () => {
+    modal.style.display = 'none';
+});
 
-        closeModal.addEventListener('click', () => {
-            modal.style.display = 'none';
-        });
+prevMoveBtn.addEventListener('click', () => {
+    if (currentStep > 0) {
+        currentStep -= 1;
+        renderGameGrid(currentStep);
+        updateControls();
+    }
+});
 
-        prevMoveBtn.addEventListener('click', () => {
-            if (currentStep > 0) {
-                currentStep -= 1;
-                renderGameGrid(currentStep);
-                updateControls();
-            }
-        });
+nextMoveBtn.addEventListener('click', () => {
+    if (currentStep < totalSteps - 1) {
+        currentStep += 1;
+        renderGameGrid(currentStep);
+        updateControls();
+    }
+});
 
-        nextMoveBtn.addEventListener('click', () => {
-            if (currentStep < totalSteps - 1) {
-                currentStep += 1;
-                renderGameGrid(currentStep);
-                updateControls();
-            }
-        });
-
-        gameLinks.forEach(link => {
-            link.addEventListener('click', async (event) => {
-                event.preventDefault();
-                const gameName = link.dataset.game;
-                await showModal(gameName);
-            });
-        });
+gameLinks.forEach(link => {
+    link.addEventListener('click', async (event) => {
+        event.preventDefault();
+        const gameName = link.dataset.game;
+        await showModal(gameName);
+    });
+});
 
     </script>
 </body>
