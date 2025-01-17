@@ -9,18 +9,23 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center; /* Centrovat obsah vertikálně */
-    height: 100vh; /* Celková výška okna */
+    height: 80vh; /* Celková výška okna */
     margin: 0;
     padding: 0;
     background-color: #f4f4f9;
     user-select: none; /* Zabrání výběru textu */
 }
-h1{
+
+h1 {
     font-size: 64px;
+    user-select: none; /* Zabrání výběru textu */
 }
-p{
+
+p {
     font-size: 32px;
+    user-select: none; /* Zabrání výběru textu */
 }
+
 .container {
     display: flex;
     flex-direction: column;
@@ -33,6 +38,7 @@ p{
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Lehké stínování */
     background-color: white;
     border-radius: 10px;
+    user-select: none; /* Zabrání výběru textu */
 }
 
 .games-box {
@@ -45,6 +51,7 @@ p{
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #fff;
+    user-select: none; /* Zabrání výběru textu */
 }
 
 .games-box::-webkit-scrollbar {
@@ -68,6 +75,7 @@ p{
     background-color: #f9f9f9;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    user-select: none; /* Zabrání výběru textu */
 }
 
 .game-item:hover {
@@ -79,6 +87,7 @@ p{
     font-weight: bold;
     margin-bottom: 20px;
     text-align: center;
+    user-select: none; /* Zabrání výběru textu */
 }
 
 .grid {
@@ -106,18 +115,34 @@ p{
 .cell:hover {
     background-color: #ddd;
 }
+
 .player1 {
     color: blue;
+    user-select: none; /* Zabrání výběru textu */
 }
 
 .player2 {
     color: red;
+    user-select: none; /* Zabrání výběru textu */
 }
+
 .winning-line {
     position: absolute;
     height: 4px;
-    background-color: red;
+    background-color: #000;
     transform-origin: 0 50%;
     z-index: 10;
     pointer-events: none;
+    user-select: none; /* Zabrání výběru textu */
+    width: 0; /* Výchozí šířka před animací */
+    animation-fill-mode: forwards; /* Po animaci zůstane finální stav */
+}
+
+@keyframes drawLine {
+    from {
+        width: 0;
+    }
+    to {
+        width: 30%; /* Šířka definovaná v JavaScriptu */
+    }
 }

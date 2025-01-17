@@ -89,18 +89,20 @@
             line.classList.add('winning-line');
         
             // Stylování čáry
-            line.style.width = `${length}px`;
+            line.style.width = `${length + 15}px`;
             line.style.height = '4px'; // Tloušťka čáry
             line.style.backgroundColor = 'red'; // Barva čáry
             line.style.position = 'absolute';
             line.style.transformOrigin = '0 50%'; // Rotace kolem levého středu
             line.style.transform = `rotate(${angle}deg)`;
-            line.style.left = `${startX}px`;
-            line.style.top = `${startY - 2}px`; // Upraví vertikální pozici čáry (polovina výšky čáry)
+            line.style.left = `${startX - 8}px`;
+            line.style.top = `${startY - 8}px`; // Upraví vertikální pozici čáry
+            line.style.animation = `drawLine 0.5s ease-out`; // Animace vykreslení čáry
         
             // Přidání čáry do gridu
             grid.appendChild(line);
         };
+        
         
         
         
