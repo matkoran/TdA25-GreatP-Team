@@ -5,30 +5,141 @@
 }
 
 body {
-    font-family: 'kraljidel';
+    font-family: 'kraljidel', sans-serif;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    justify-content: center; /* Centrovat obsah vertikálně */
-    height: 100vh; /* Celková výška okna */
+    height: 100vh;
     margin: 0;
-    padding: 0;
     background-color: #f4f4f9;
-    user-select: none; /* Zabrání výběru textu */
+}
+
+.container-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
 }
 
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 800px; /* Maximální šířka obsahu */
-    margin: 0 auto;
+    width: 300px;
     padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Lehké stínování */
     background-color: white;
     border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.container h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+.container:nth-child(2) {
+    background-image: url('/static/background.png'); /* Path to your image */
+    background-size: cover;
+    background-position: center;
+    min-height: 900px;
+    min-width: 900px;
+    box-shadow: none;
+    justify-content: center;
+}
+.inner_container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input {
+    width: 100%;
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #ff0000;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.grid-background {
+    display: grid;
+    grid-template-columns: repeat(15, 40px);
+    grid-template-rows: repeat(15, 40px);
+    gap: 1px;
+    background-color: #333;
+    width: 600px;
+    height: 600px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.grid-background div {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+}
+
+.game-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 600px;
+    height: 600px;
+}
+
+.game-container .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+button:hover {
+    background-color: #0000ff;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    margin: 5px 0;
+}
+
+ul li a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+ul li a:hover {
+    text-decoration: underline;
 }
 .title {
     font-size: 84px;
@@ -78,14 +189,7 @@ button {
 button:hover {
     background-color: #0000ff;
 }
-.grid {
-    display: grid;
-    grid-template-columns: repeat(15, 40px);
-    grid-template-rows: repeat(15, 40px);
-    gap: 1px;
-    background-color: #333;
-    user-select: none; /* Zabrání výběru textu */
-}
+
 
 .cell {
     width: 40px;
@@ -156,4 +260,45 @@ button:hover {
     font-size: 16px;
     font-weight: bold;
     user-select: none;
+}
+
+
+
+
+
+.grid-background {
+    display: grid;
+    grid-template-columns: repeat(15, 40px);
+    grid-template-rows: repeat(15, 40px);
+    gap: 1px;
+    background-color: #333;
+    overflow: hidden;
+}
+
+.grid-background .grid-cell {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border: 1px solid #ccc;
+}
+
+.game-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 600px;
+    height: 600px;
+}
+
+.game-container .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }

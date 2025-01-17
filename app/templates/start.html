@@ -7,25 +7,60 @@
     <link rel="stylesheet" href="/static/style_start.css">
 </head>
 <body>
-    <h1>Vítejte v Piškvorkách!</h1>
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
-    <form action="/game" method="POST">
-        <label for="game_name">Název hry:</label>
-        <input type="text" id="game_name" name="game_name" required>
-        <button type="submit">Začít</button>
-    </form>
-    <h2>Uložené hry</h2>
-    <ul>
-        {% for game in games %}
-            <li>
-                <a href="#" class="game-link" data-game="{{ game.name }}">
-                    {{ game.name }} ({{ game.date }})
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="container-wrapper">
+        <!-- Nastavení jmen -->
+        <div class="container">
+            <h2>Nastavení hráčů</h2>
+            <form id="playerNamesForm">
+                <label for="player1">Jméno hráče 1:</label>
+                <input type="text" id="player1" placeholder="Hráč 1">
+                <label for="player2">Jméno hráče 2:</label>
+                <input type="text" id="player2" placeholder="Hráč 2">
+                <button type="button" id="saveNames">Uložit</button>
+            </form>
+        </div>
+        
+        <div class="game-container">
+            <div class="grid-background">
+                <!-- Generate grid cells dynamically -->
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const gridBackground = document.querySelector('.grid-background');
+                        for (let i = 0; i < 225; i++) {
+                            const cell = document.createElement('div');
+                            cell.classList.add('grid-cell');
+                            gridBackground.appendChild(cell);
+                        }
+                    });
+                </script>
+            </div>
+            <div class="content">
+                <h2>Začátek hry</h2>
+                {% if error %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endif %}
+                <form action="/game" method="POST">
+                    <label for="game_name">Název hry:</label>
+                    <input type="text" id="game_name" name="game_name" required>
+                    <button type="submit">Začít</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Uložené hry -->
+        <div class="container">
+            <h2>Uložené hry</h2>
+            <ul>
+                {% for game in games %}
+                    <li>
+                        <a href="#" class="game-link" data-game="{{ game.name }}">
+                            {{ game.name }} ({{ game.date }})
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 
     <!-- Modal okno -->
     <div class="modal" id="gameModal">
@@ -41,18 +76,7 @@
             <button id="deleteGame" class="delete-button">Smazat hru</button> <!-- New Delete Button -->
         </div>
     </div>
-            <!-- Sekce pro zadání jmen hráčů -->
-    <h2>Nastavení hráčů</h2>
-    <form id="playerNamesForm">
-        <label for="player1">Jméno hráče 1:</label>
-        <input type="text" id="player1" placeholder="Hráč 1">
-        <br>
-        <label for="player2">Jméno hráče 2:</label>
-        <input type="text" id="player2" placeholder="Hráč 2">
-        <br>
-        <button type="button" id="saveNames">Uložit</button>
-    </form>
-        
+
     
 
     <script>
