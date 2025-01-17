@@ -8,8 +8,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* Centrovat obsah vertikálně */
-    height: 80vh; /* Celková výška okna */
+    justify-content: center;
+    height: 90vh; /* Zvětšeno, aby se lépe využila výška stránky */
     margin: 0;
     padding: 0;
     background-color: #f4f4f9;
@@ -17,13 +17,13 @@ body {
 }
 
 h1 {
-    font-size: 64px;
-    user-select: none; /* Zabrání výběru textu */
+    font-size: 48px; /* Zmenšeno */
+    user-select: none;
 }
 
 p {
-    font-size: 32px;
-    user-select: none; /* Zabrání výběru textu */
+    font-size: 24px; /* Zmenšeno */
+    user-select: none;
 }
 
 .container {
@@ -32,50 +32,50 @@ p {
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 800px; /* Maximální šířka obsahu */
+    max-width: 600px; /* Zmenšeno */
     margin: 0 auto;
-    padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Lehké stínování */
+    padding: 15px; /* Zmenšeno */
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* Zmenšeno stínování */
     background-color: white;
-    border-radius: 10px;
-    user-select: none; /* Zabrání výběru textu */
+    border-radius: 8px; /* Zmenšeno */
+    user-select: none;
 }
 
 .games-box {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-height: 300px; /* Maximální výška boxu pro hry */
-    overflow-y: auto; /* Povolí posouvání ve svislém směru */
-    padding: 10px;
+    max-height: 200px; /* Zmenšena maximální výška */
+    overflow-y: auto;
+    padding: 8px; /* Zmenšeno */
     border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: 6px; /* Zmenšeno */
     background-color: #fff;
-    user-select: none; /* Zabrání výběru textu */
+    user-select: none;
 }
 
 .games-box::-webkit-scrollbar {
-    width: 10px; /* Šířka scrollbar-u */
+    width: 8px; /* Zmenšena šířka scrollbar-u */
 }
 
 .games-box::-webkit-scrollbar-thumb {
-    background: #888; /* Barva scrollbar-u */
-    border-radius: 5px;
+    background: #888;
+    border-radius: 4px; /* Zmenšeno */
 }
 
 .games-box::-webkit-scrollbar-thumb:hover {
-    background: #555; /* Barva scrollbar-u při najetí myší */
+    background: #555;
 }
 
 .game-item {
-    padding: 10px;
-    margin-bottom: 8px;
+    padding: 8px; /* Zmenšeno */
+    margin-bottom: 6px; /* Zmenšeno */
     border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 4px; /* Zmenšeno */
     background-color: #f9f9f9;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    user-select: none; /* Zabrání výběru textu */
+    user-select: none;
 }
 
 .game-item:hover {
@@ -83,32 +83,32 @@ p {
 }
 
 .title {
-    font-size: 24px;
+    font-size: 20px; /* Zmenšeno */
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* Zmenšeno */
     text-align: center;
-    user-select: none; /* Zabrání výběru textu */
+    user-select: none;
 }
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(15, 40px);
-    grid-template-rows: repeat(15, 40px);
+    grid-template-columns: repeat(15, 30px); /* Zmenšena velikost buněk */
+    grid-template-rows: repeat(15, 30px); /* Zmenšena velikost buněk */
     gap: 1px;
     background-color: #333;
-    user-select: none; /* Zabrání výběru textu */
+    user-select: none;
 }
 
 .cell {
-    width: 40px;
-    height: 40px;
+    width: 30px; /* Zmenšeno */
+    height: 30px; /* Zmenšeno */
     background-color: white;
     border: 1px solid #ccc;
     text-align: center;
-    line-height: 40px;
-    font-size: 32px;
+    line-height: 30px; /* Zmenšeno */
+    font-size: 28px; /* Zmenšeno */
     font-weight: bold;
-    user-select: none; /* Zabrání výběru textu */
+    user-select: none;
     cursor: pointer;
 }
 
@@ -118,24 +118,24 @@ p {
 
 .player1 {
     color: blue;
-    user-select: none; /* Zabrání výběru textu */
+    user-select: none;
 }
 
 .player2 {
     color: red;
-    user-select: none; /* Zabrání výběru textu */
+    user-select: none;
 }
 
 .winning-line {
     position: absolute;
-    height: 4px;
+    height: 3px; /* Zmenšeno */
     background-color: #000;
     transform-origin: 0 50%;
     z-index: 10;
     pointer-events: none;
-    user-select: none; /* Zabrání výběru textu */
-    width: 0; /* Výchozí šířka před animací */
-    animation-fill-mode: forwards; /* Po animaci zůstane finální stav */
+    user-select: none;
+    width: 0;
+    animation-fill-mode: forwards;
 }
 
 @keyframes drawLine {
