@@ -167,17 +167,36 @@ def replay():
     current_move = moves[step]
     return jsonify({"move": current_move, "step": step, "total_steps": len(moves)})
 
+@app.route('/api/delete_game', methods=['POST'])
+def delete_game():
+    try:
+        # Načtení ID hry z požadavku
+        game_name = request.json.get("game_name")
+        if not game_name:
+            return jsonify({"message": "Není zadán název hry."}), 400
+
+        # Cesta k souboru hry
+        game_path = os.path.join(SAVED_GAMES_DIR, f"{game_name}.json")
+
+        # Kontrola, zda soubor existuje
+        if not os.path.exists(game_path):
+            return jsonify({"message": "Hra nebyla nalezena."}), 404
+
+        # Odstranění souboru
+        os.remove(game_path)
+        return jsonify({"message": "Hra byla úspěšně odstraněna."}), 200
+
+    except Exception as e:
+        return jsonify({"message": "Došlo k chybě.", "error": str(e)}), 500
+
 def save_game():
     """
     Uloží záznam hry do JSON souboru.
     """
     if game_name:
         file_path = os.path.join(SAVED_GAMES_DIR, f"{game_name}.json")
-        # Formátování času na "YYYY-MM-DD HH:MM"
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M")
         with open(file_path, 'w') as f:
-            json.dump({"game_name": game_name, "moves": moves, "date": current_time}, f)
-
+            json.dump({"game_name": game_name, "moves": moves, "date": datetime.now().isoformat()}, f)
 
 if __name__ == '__main__':
     app.run(debug=True)
