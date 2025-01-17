@@ -328,6 +328,10 @@ h2{
     height: 40px;
     background-color: white;
 }
+p{
+    font-size: 28px;
+    font-weight: bold;
+}
 
 .grid-background .grid-cell {
     width: 40px;

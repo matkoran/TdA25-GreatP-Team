@@ -25,6 +25,7 @@ def check(x, y, pole, z):
 def win(x, y, pole, z):
     p1 = 1
     p2 = 1
+    winning_combination = []
 
     # Horizontální
     while check(x + p1, y, pole, z):
@@ -32,42 +33,40 @@ def win(x, y, pole, z):
     while check(x - p2, y, pole, z):
         p2 += 1
     if p1 + p2 - 1 >= 5:
-        return True
-    else:
-        p1 = 1
-        p2 = 1
+        winning_combination = [(x + i, y) for i in range(-p2 + 1, p1)]
+        return True, winning_combination
 
     # Vertikální
+    p1 = p2 = 1
     while check(x, y - p1, pole, z):
         p1 += 1
     while check(x, y + p2, pole, z):
         p2 += 1
     if p1 + p2 - 1 >= 5:
-        return True
-    else:
-        p1 = 1
-        p2 = 1
+        winning_combination = [(x, y + i) for i in range(-p1 + 1, p2)]
+        return True, winning_combination
 
     # Diagonální /
+    p1 = p2 = 1
     while check(x + p1, y - p1, pole, z):
         p1 += 1
     while check(x - p2, y + p2, pole, z):
         p2 += 1
     if p1 + p2 - 1 >= 5:
-        return True
-    else:
-        p1 = 1
-        p2 = 1
+        winning_combination = [(x + i, y - i) for i in range(-p2 + 1, p1)]
+        return True, winning_combination
 
     # Diagonální \
+    p1 = p2 = 1
     while check(x - p1, y - p1, pole, z):
         p1 += 1
     while check(x + p2, y + p2, pole, z):
         p2 += 1
     if p1 + p2 - 1 >= 5:
-        return True
-    else:
-        return False
+        winning_combination = [(x + i, y + i) for i in range(-p2 + 1, p1)]
+        return True, winning_combination
+
+    return False, []
 
 @app.route('/')
 def start():
@@ -179,7 +178,7 @@ def save_game():
         file_path = os.path.join(SAVED_GAMES_DIR, f"{game_name}.json")
         
         # Získání aktuálního času ve formátu "HH:MM"
-        current_time = datetime.now().strftime("%H:%M")
+        current_time = datetime.now().strftime("%m/%d/%Y, %H:%M")
         
         with open(file_path, 'w') as f:
             json.dump({"game_name": game_name, "moves": moves, "date": current_time}, f)
