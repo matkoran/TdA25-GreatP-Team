@@ -106,3 +106,10 @@ p{
 .cell:hover {
     background-color: #ddd;
 }
+.player1 {
+    color: blue;
+}
+
+.player2 {
+    color: red;
+}
