@@ -30,6 +30,11 @@
                 alert('Došlo k chybě při komunikaci se serverem.');
             }
         }
+
+        const showDeleteButton = (gameName) => {
+            const deleteButtonContainer = document.getElementById('deleteButtonContainer');
+            deleteButtonContainer.innerHTML = `<button onclick="deleteGame('${gameName}')">Odstranit tuto hru</button>`;
+        };
     </script>
 </head>
 <body>
@@ -47,13 +52,14 @@
     <ul>
         {% for game in games %}
             <li id="game-{{ game.name }}">
-                <a href="#" class="game-link" data-game="{{ game.name }}">
+                <a href="#" class="game-link" onclick="showDeleteButton('{{ game.name }}')">
                     {{ game.name }} ({{ game.date }})
                 </a>
-                <button onclick="deleteGame('{{ game.name }}')">Odstranit</button>
             </li>
         {% endfor %}
     </ul>
+
+    <div id="deleteButtonContainer"></div>
 
     <!-- Modal okno -->
     <div class="modal" id="gameModal">
@@ -178,6 +184,7 @@
                 event.preventDefault();
                 const gameName = link.dataset.game;
                 await showModal(gameName);
+                showDeleteButton(gameName);
             });
         });
 
