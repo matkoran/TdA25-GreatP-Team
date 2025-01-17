@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Začátek hry</title>
-    <link rel="stylesheet" href="/static/styles.css">
-<<<<<<< HEAD
+    <link rel="stylesheet" href="/static/style_start.css">
     <script>
         async function deleteGame(gameName) {
-            const confirmation = confirm(`Opravdu chcete odstranit hru: ${gameName}?`);
+            const confirmation = confirm(Opravdu chcete odstranit hru: ${gameName}?);
             if (!confirmation) return;
 
             try {
@@ -23,7 +22,7 @@
                 const result = await response.json();
                 if (response.ok) {
                     alert(result.message);
-                    document.getElementById(`game-${gameName}`).remove();
+                    document.getElementById(game-${gameName}).remove();
                 } else {
                     alert(result.message || 'Chyba při odstraňování hry.');
                 }
@@ -31,14 +30,7 @@
                 alert('Došlo k chybě při komunikaci se serverem.');
             }
         }
-
-        const showDeleteButton = (gameName) => {
-            const deleteButtonContainer = document.getElementById('deleteButtonContainer');
-            deleteButtonContainer.innerHTML = `<button onclick="deleteGame('${gameName}')">Odstranit tuto hru</button>`;
-        };
     </script>
-=======
->>>>>>> parent of de284a2 (uprava styles)
 </head>
 <body>
     <h1 class="title">Vítejte v Piškvorkách!</h1>
@@ -55,14 +47,13 @@
     <ul>
         {% for game in games %}
             <li id="game-{{ game.name }}">
-                <a href="#" class="game-link" onclick="showDeleteButton('{{ game.name }}')">
+                <a href="#" class="game-link" data-game="{{ game.name }}">
                     {{ game.name }} ({{ game.date }})
                 </a>
+                <button onclick="deleteGame('{{ game.name }}')">Odstranit</button>
             </li>
         {% endfor %}
     </ul>
-
-    <div id="deleteButtonContainer"></div>
 
     <!-- Modal okno -->
     <div class="modal" id="gameModal">
@@ -93,7 +84,7 @@
         let allMoves = [];
 
         const fetchAllMoves = async (gameName) => {
-            const response = await fetch(`/load_game_data/${gameName}`);
+            const response = await fetch(/load_game_data/${gameName});
             const data = await response.json();
             return data.moves;
         };
@@ -144,7 +135,7 @@
         };
 
         const updateControls = () => {
-            stepIndicator.textContent = `Tah: ${currentStep + 1}`;
+            stepIndicator.textContent = Tah: ${currentStep + 1};
             prevMoveBtn.disabled = currentStep <= 0;
             nextMoveBtn.disabled = currentStep >= totalSteps - 1;
         };
@@ -187,7 +178,6 @@
                 event.preventDefault();
                 const gameName = link.dataset.game;
                 await showModal(gameName);
-                showDeleteButton(gameName);
             });
         });
 
