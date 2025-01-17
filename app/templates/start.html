@@ -35,7 +35,11 @@
                 </script>
             </div>
             <div class="content">
-                <h2>Začátek hry</h2>
+                <div class="nadpis_s_obrazky">
+                    <img src="static/krizek.png" alt="Gkrizek" width="50" height="50">
+                    <h2>Začátek hry</h2>
+                    <img src="static/kolecko.png" alt="Gkolecko" width="50" height="50">
+                </div>
                 {% if error %}
                     <p style="color: red;">{{ error }}</p>
                 {% endif %}
@@ -47,20 +51,23 @@
             </div>
         </div>
 
-        <!-- Uložené hry -->
-        <div class="container">
-            <h2>Uložené hry</h2>
-            <ul>
-                {% for game in games %}
-                    <li>
-                        <a href="#" class="game-link" data-game="{{ game.name }}">
-                            {{ game.name }} ({{ game.date }})
-                        </a>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
+<!-- Uložené hry -->
+<div class="container">
+    <h2>Uložené hry</h2>
+    <div class="games-container">
+        {% for game in games %}
+            <div class="game-box">
+                <div class="game-header">
+                    <h3>{{ game.name }}</h3>
+                    <span class="game-date">{{ game.date }}</span>
+                </div>
+                <div class="game-actions">
+                    <a href="#" class="game-link" data-game="{{ game.name }}">Zobrazit</a>
+                </div>
+            </div>
+        {% endfor %}
     </div>
+</div>
 
     <!-- Modal okno -->
     <div class="modal" id="gameModal">
@@ -87,6 +94,7 @@ const prevMoveBtn = document.getElementById('prevMove');
 const nextMoveBtn = document.getElementById('nextMove');
 const stepIndicator = document.getElementById('stepIndicator');
 const gameLinks = document.querySelectorAll('.game-link');
+const deleteGameBtn = document.getElementById('deleteGame');
 
 const updatePlaceholders = () => {
             const player1Name = localStorage.getItem('player1') || 'Hráč 1';

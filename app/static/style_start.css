@@ -25,7 +25,6 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 300px;
     padding: 20px;
     background-color: white;
     border-radius: 10px;
@@ -33,7 +32,7 @@ body {
 }
 
 .container h2 {
-    font-size: 48px;
+    font-size: 40px;
     margin-bottom: 10px;
 }
 .container:nth-child(2) {
@@ -100,22 +99,67 @@ button:hover {
     background-color: #0000ff;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
+/* Scrollovatelný kontejner pro hry */
+.games-container {
+    max-height: 400px; /* Nastavit maximální výšku pro scrollování */
+    overflow-y: auto;  /* Povolit vertikální scrollování */
+    margin-top: 20px;
 }
 
-ul li {
-    margin: 5px 0;
+/* Box pro každou hru */
+.game-box {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9;
 }
 
-ul li a {
+/* Titulek hry (tučný) */
+.game-header h3 {
+    font-weight: bold;
+    margin: 0;
+    font-size: 22px;
+}
+.game-header{
+    padding: 0px 50px 0px 0px;
+}
+#saveNames{
+    background-color: transparent;
+    border: solid 1px #0000ff;
+    color: #0000ff;
+    font-size: 18px;
+    margin-top: 10px;
+}
+#saveNames:hover{
+    background-color: #0000ff;
+    border: solid 2px #0000ff;
+    color: #fff;
+}
+
+/* Datum hry */
+.game-date {
+    font-size: 1.5em;
+    color: #777;
+}
+
+/* Tlačítko pro zobrazení hry */
+.game-actions a {
     text-decoration: none;
-    color: #007bff;
+    color: #ff0000;
+    font-weight: bold;
+    padding: 8px 16px;
+    border: 1px solid #ff0000;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
 
-ul li a:hover {
-    text-decoration: underline;
+/* Hover efekt pro tlačítko */
+.game-actions a:hover {
+    background-color: #ff0000;
+    color: white;
 }
 .title {
     font-size: 84px;
@@ -136,7 +180,7 @@ form {
 }
 
 label {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: bold;
     padding: 5px;
 }
@@ -241,7 +285,17 @@ span{
     background-color: #fff;
     user-select: none; /* Zabrání výběru textu */
     justify-content: center;
-    gap: 1px;
+}
+.nadpis_s_obrazky{
+    display: flex;
+    align-items: center; /* Vertikální zarovnání na střed */
+    justify-content: center; /* Horizontální zarovnání (volitelné, např. pro středění) */
+    gap: 20px;
+}.nadpis_s_obrazky img{
+    display: block;
+}
+.nadpis_s_obrazky{
+    margin: 0;
 }
 
 .game-cell {
@@ -251,13 +305,13 @@ span{
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 16px;
+    font-size: 24px;
     font-weight: bold;
     user-select: none;
 }
 
 h2{
-    font-size: 80px;
+    font-size: 64px;
 }
 
 .grid-background {

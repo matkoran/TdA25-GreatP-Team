@@ -177,8 +177,29 @@ def save_game():
     """
     if game_name:
         file_path = os.path.join(SAVED_GAMES_DIR, f"{game_name}.json")
+        
+        # Získání aktuálního času ve formátu "HH:MM"
+        current_time = datetime.now().strftime("%H:%M")
+        
         with open(file_path, 'w') as f:
-            json.dump({"game_name": game_name, "moves": moves, "date": datetime.now().isoformat()}, f)
+            json.dump({"game_name": game_name, "moves": moves, "date": current_time}, f)
+
+
+@app.route('/delete_game/<game_name>', methods=['DELETE'])
+def delete_game(game_name):
+    """
+    Smaže hru na základě jejího názvu.
+    """
+    file_path = os.path.join(SAVED_GAMES_DIR, f"{game_name}.json")
+
+    # Kontrola, zda soubor existuje
+    if not os.path.exists(file_path):
+        return jsonify({"error": "Hra neexistuje"}), 404
+
+    # Smazání souboru hry
+    os.remove(file_path)
+    return jsonify({"success": True, "message": f"Hra '{game_name}' byla úspěšně smazána."})
+
 
 if __name__ == '__main__':
     app.run(debug=True)
