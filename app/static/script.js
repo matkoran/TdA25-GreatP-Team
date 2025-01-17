@@ -1,49 +1,52 @@
-const grid = document.getElementById('gameGrid');
-const currentPlayerDisplay = document.getElementById('currentPlayer');
+        // Načtení jmen hráčů z localStorage
+        const player1Name = localStorage.getItem('player1') || 'Hráč 1';
+        const player2Name = localStorage.getItem('player2') || 'Hráč 2';
+        const currentPlayerDisplay = document.getElementById('currentPlayer');
 
-// Inicializace hracího pole
-const createGrid = () => {
-    for (let y = 0; y < 15; y++) {
-        for (let x = 0; x < 15; x++) {
-            const cell = document.createElement('div');
-            cell.classList.add('cell');
-            cell.dataset.x = x;
-            cell.dataset.y = y;
-            cell.addEventListener('click', handleCellClick);
-            grid.appendChild(cell);
-        }
-    }
-};
+        // Zobrazí aktuálního hráče
+        currentPlayerDisplay.textContent = player1Name;
 
-// Zpracování kliknutí na políčko
-const handleCellClick = async (event) => {
-    const cell = event.target;
-    const x = parseInt(cell.dataset.x);
-    const y = parseInt(cell.dataset.y);
+        // Využití zadaných jmen v logice hry
+        const grid = document.getElementById('gameGrid');
 
-    const currentPlayer = parseInt(currentPlayerDisplay.textContent);
+        const createGrid = () => {
+            for (let y = 0; y < 15; y++) {
+                for (let x = 0; x < 15; x++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.dataset.x = x;
+                    cell.dataset.y = y;
+                    cell.addEventListener('click', handleCellClick);
+                    grid.appendChild(cell);
+                }
+            }
+        };
 
-    // Odeslání požadavku na server
-    const response = await fetch('/api/play', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ x, y, player: currentPlayer })
-    });
+        const handleCellClick = async (event) => {
+            const cell = event.target;
+            const x = parseInt(cell.dataset.x);
+            const y = parseInt(cell.dataset.y);
+            const currentPlayer = currentPlayerDisplay.textContent === player1Name ? 1 : 2;
 
-    const result = await response.json();
+            const response = await fetch('/api/play', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ x, y, player: currentPlayer })
+            });
 
-    if (result.success) {
-        cell.textContent = currentPlayer === 1 ? 'X' : 'O';
-        currentPlayerDisplay.textContent = currentPlayer === 1 ? '2' : '1';
+            const result = await response.json();
 
-        if (result.winner) {
-            alert(`Hráč ${result.winner} vyhrál! Hra se restartuje.`);
-            window.location.href = '/';
-        }
-    } else {
-        alert(result.message);
-    }
-};
+            if (result.success) {
+                cell.textContent = currentPlayer === 1 ? 'X' : 'O';
+                currentPlayerDisplay.textContent = currentPlayer === 1 ? player2Name : player1Name;
 
-// Vytvoření herního pole při načtení stránky
-createGrid();
+                if (result.winner) {
+                    alert(`Hráč ${result.winner === 1 ? player1Name : player2Name} vyhrál! Hra se restartuje.`);
+                    window.location.href = '/';
+                }
+            } else {
+                alert(result.message);
+            }
+        };
+
+        createGrid();

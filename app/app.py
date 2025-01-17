@@ -89,10 +89,13 @@ def start():
 @app.route('/game', methods=['POST'])
 def game():
     """
-    Zobrazí herní stránku po zadání názvu hry.
+    Zobrazí herní stránku po zadání názvu hry a jmen hráčů.
     """
-    global game_name, matrix, moves
+    global game_name, matrix, moves, player1, player2
     game_name = request.form['game_name'].replace(" ", "_")
+    player1 = request.form.get('player1', 'Hráč 1')
+    player2 = request.form.get('player2', 'Hráč 2')
+
     file_path = os.path.join(SAVED_GAMES_DIR, f"{game_name}.json")
 
     # Kontrola, zda již hra existuje
@@ -102,7 +105,8 @@ def game():
     # Inicializace nové hry
     matrix = [[0 for _ in range(15)] for _ in range(15)]
     moves = []
-    return render_template('index.html', game_name=game_name)
+    return render_template('index.html', game_name=game_name, player1=player1, player2=player2)
+
 
 @app.route('/load_game_data/<game_name>')
 def load_game_data(game_name):

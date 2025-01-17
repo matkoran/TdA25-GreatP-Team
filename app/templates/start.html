@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Začátek hry</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="/static/style_start.css">
 </head>
 <body>
     <h1>Vítejte v Piškvorkách!</h1>
@@ -38,8 +38,22 @@
                 <span id="stepIndicator">Tah: 0</span>
                 <button id="nextMove">Následující</button>
             </div>
+            <button id="deleteGame" class="delete-button">Smazat hru</button> <!-- New Delete Button -->
         </div>
     </div>
+            <!-- Sekce pro zadání jmen hráčů -->
+    <h2>Nastavení hráčů</h2>
+    <form id="playerNamesForm">
+        <label for="player1">Jméno hráče 1:</label>
+        <input type="text" id="player1" placeholder="Hráč 1">
+        <br>
+        <label for="player2">Jméno hráče 2:</label>
+        <input type="text" id="player2" placeholder="Hráč 2">
+        <br>
+        <button type="button" id="saveNames">Uložit</button>
+    </form>
+        
+    
 
     <script>
         const modal = document.getElementById('gameModal');
@@ -49,6 +63,33 @@ const prevMoveBtn = document.getElementById('prevMove');
 const nextMoveBtn = document.getElementById('nextMove');
 const stepIndicator = document.getElementById('stepIndicator');
 const gameLinks = document.querySelectorAll('.game-link');
+
+const updatePlaceholders = () => {
+            const player1Name = localStorage.getItem('player1') || 'Hráč 1';
+            const player2Name = localStorage.getItem('player2') || 'Hráč 2';
+
+            document.getElementById('player1').placeholder = player1Name;
+            document.getElementById('player2').placeholder = player2Name;
+        };
+
+        // Uložení jmen hráčů po kliknutí na "Uložit"
+        document.getElementById('saveNames').addEventListener('click', () => {
+            const player1Name = document.getElementById('player1').value.trim() || 'Hráč 1';
+            const player2Name = document.getElementById('player2').value.trim() || 'Hráč 2';
+
+            // Uložení jmen do localStorage
+            localStorage.setItem('player1', player1Name);
+            localStorage.setItem('player2', player2Name);
+
+            // Aktualizace placeholderů
+            updatePlaceholders();
+
+            // Potvrzení uložení uživateli
+            alert('Jména hráčů byla uložena!');
+        });
+
+        // Nastavení placeholderů při načtení stránky
+        document.addEventListener('DOMContentLoaded', updatePlaceholders);
 
 let currentGame = null;
 let currentStep = 0;
@@ -151,6 +192,20 @@ gameLinks.forEach(link => {
         const gameName = link.dataset.game;
         await showModal(gameName);
     });
+});
+
+deleteGameBtn.addEventListener('click', async () => {
+    if (confirm(`Opravdu chcete smazat hru "${currentGame}"?`)) {
+        const response = await fetch(`/delete_game/${currentGame}`, { method: 'DELETE' });
+
+        if (response.ok) {
+            alert('Hra byla úspěšně smazána.');
+            modal.style.display = 'none';
+            location.reload(); // Reload the page to update the game list
+        } else {
+            alert('Chyba při mazání hry.');
+        }
+    }
 });
 
     </script>
