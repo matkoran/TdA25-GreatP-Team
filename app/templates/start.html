@@ -7,13 +7,14 @@
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
-    <h1>Vítejte v Piškvorkách!</h1>
+    <h1 class="title">Vítejte v Piškvorkách!</h1>
     {% if error %}
         <p style="color: red;">{{ error }}</p>
     {% endif %}
     <form action="/game" method="POST">
-        <label for="game_name">Název hry:</label>
+        <label for="game_name" class="game_title">Název hry:</label>
         <input type="text" id="game_name" name="game_name" required>
+        <br>
         <button type="submit">Začít</button>
     </form>
     <h2>Uložené hry</h2>
